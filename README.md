@@ -20,11 +20,11 @@ pip install -r requirements.txt
 3. Download Pretrained Models
 Download the pretrained models from the following links:
 
-[Download BodyPose Model](https://drive.google.com/file/d/1r_pjyqLFOP8sO1dYC_zZSUqJ5PBZ4LLm/view?usp=drive_link)
-[Download HeadPose Model for Room View](https://drive.google.com/file/d/1QMIPOBYdQwJ9HF4tJQbB1INtmkOEelsj/view?usp=drive_link)
-[Download HeadPose Model for Mat view](https://drive.google.com/file/d/1WBDN4M5CsZlrarTvoS8VIjNknPltgyp9/view?usp=drive_link)
-[Download Child Adult Classifier](https://drive.google.com/file/d/1r_pjyqLFOP8sO1dYC_zZSUqJ5PBZ4LLm/view?usp=drive_link)
-[Download Toy Tracking Model](https://example.com/toy_tracking_model.pth)
+- [Download BodyPose Model](https://drive.google.com/file/d/1r_pjyqLFOP8sO1dYC_zZSUqJ5PBZ4LLm/view?usp=drive_link)
+- [Download HeadPose Model for Room View](https://drive.google.com/file/d/1QMIPOBYdQwJ9HF4tJQbB1INtmkOEelsj/view?usp=drive_link)
+- [Download HeadPose Model for Mat view](https://drive.google.com/file/d/1WBDN4M5CsZlrarTvoS8VIjNknPltgyp9/view?usp=drive_link)
+- [Download Child Adult Classifier](https://drive.google.com/file/d/1r_pjyqLFOP8sO1dYC_zZSUqJ5PBZ4LLm/view?usp=drive_link)
+- [Download Toy Tracking Model](https://example.com/toy_tracking_model.pth)
 
 4. Place Pretrained Models
 Place the downloaded pretrained models in the following directories of this repository.
