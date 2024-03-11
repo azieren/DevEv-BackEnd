@@ -1,0 +1,16 @@
+*.mp4
+*.txt
+*.jpg
+*.png
+*.pth
+*.pyc
+
+# Exclude some folders
+attention_results/
+corrected_*/
+eval/
+FrontBackClass/
+toyTracking/DatasetDetector/
+toyTracking/outputs/
+
+

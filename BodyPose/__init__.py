@@ -1,0 +1,1 @@
+from .inference_8 import main_bodypose as inferbody
