@@ -135,7 +135,7 @@ python main_2D3D_mv.py --output_dir /path/to/output/ --body_dir /path/to/bodypos
 
 ## main_toy_track.py
 
-This script performs tracking of toys in videos.
+This script performs tracking of toys in videos. The instruction for dataset preparation and training can be found in [toyTracking/README.md](toyTracking/README.md)
 
 ### Usage
 
