@@ -7,7 +7,7 @@ from math import cos, sin
 from scipy.spatial.transform import Rotation  
 from collections import OrderedDict
 
-import matplotlib.pyplot as plt
+import argparse
 
 def get_timestamp(filename="DevEvData_2023-04-26.csv"):
     with open(filename) as f:
@@ -441,15 +441,19 @@ def extract_unbalance_dataset(mydict, gtdir, timestamps, output_dir = ""):
         vidcap.release()
     return
 
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/dataset/", help="Directory path containing original videos.")
+    parser.add_argument('--output_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_attention/file_merged.txt", help="Directory path where head pose dataset will be written")
+    parser.add_argument('--body_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_bodypose/", help="Directory path where body pose files are")
+    parser.add_argument('--corrected_head_dir', type=str, default="corrected_quadrant/", help="Attention files with head orientation to copy from")
+    parser.add_argument('--timestamps', type=str, default="DevEvData_2024-02-02.csv", help="Path to timestamp file")
+    args = parser.parse_args()
+    return args
 
 if __name__ == "__main__":
-    gtdir = "corrected_quadrant/"
-    output_dir = "/nfs/hpc/cn-gpu5/DevEv/headpose_dataset/bodyhead_dataset_quad/"
-    videodir = "/nfs/hpc/cn-gpu5/DevEv/dataset/"
-    bodydir = "/nfs/hpc/cn-gpu5/DevEv/viz_bodypose/"
-    timestamps = "DevEvData_2024-02-02.csv"
-    mydict={'bodydir':bodydir, 'videodir':videodir}
-    
+    args = parse_args()
+    mydict={'bodydir':args.body_dir, 'videodir':args.input_dir}
     #extract_unbalance_dataset(mydict, gtdir, timestamps, output_dir = "")
-    generate_dataset(mydict, gtdir, timestamps, output_dir = output_dir)
+    generate_dataset(mydict, args.corrected_head_dir, args.timestamps, output_dir = args.output_dir)
 

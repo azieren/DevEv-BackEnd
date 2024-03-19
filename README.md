@@ -46,7 +46,7 @@ These arguments are commonly used across multiple scripts:
 - `--check_time`: Used only for checking the current amount of frames processed by existing files.
 - `--check_remaining`: Used only for checking the files that have not been processed yet.
 
-## main_bodypose.py
+## Body Detection and Keypoints: main_bodypose.py
 
 This script performs body pose estimation on videos and generates body pose files. Optionally, it can also generate visualization videos alongside the pose files. If the original does not exist in the input folder, then it will be automatically downloaded from databrary.
 
@@ -81,9 +81,11 @@ For each video, two files will be written:
     - `x_l`, `y_l`: 2D Position for keypoint "left ankle".
     - `x_n`, `y_n`: 2D Position for keypoint "nose" .
 
-## main_head.py
+## Head Pose in 3D: main_head.py
 
-This script performs child/adult classification to detect and track the child in the video for every view, as well as predicting the head orientation in 3D. It takes the bounding box and keypoint information output from "main_bodypose.py" as input, along with the original videos.
+This script performs child/adult classification to detect and track the child in the video for every view, as well as predicting the head orientation in 3D. It takes the bounding box and keypoint information output from "main_bodypose.py" as input, along with the original videos. 
+
+While the main script only does inference, it is also possible to retrain a new model. The data preparation can be achieved by using a dataset composed of corrected attention file and processed video then running [make_dataset_bodypose.py](make_dataset_bodypose.py) for processing the data and prepare them for training the headpose model. The training code can be found in [here](HeadPose/README.md)
 
 ### Usage
 
@@ -107,7 +109,7 @@ For each video, a .txt file will be written  where each rows have the following 
     - `R_x`, `R_y`, `R_z`: Head orientation as a 3D vector associated to the head bounding box
 
 
-## main_2D3D_mv.py
+## Head and Hands in 3D: main_2D3D_mv.py
 
 This script takes as input the output from `main_headpose.py` and projects the head location, hands location from 2D to 3D, and head orientation and attention points. It uses the 3D model of the room to compute collision between the attention and the room for computing the attention point.
 
@@ -133,7 +135,7 @@ python main_2D3D_mv.py --output_dir /path/to/output/ --body_dir /path/to/bodypos
     - `handL_x`, `handL_y`, `handL_z`: Projected left hand location in 3D. (x,y,z)
     - `handR_x`, `handR_y`, `handR_z`: Projected right hand location in 3D. (x,y,z)
 
-## main_toy_track.py
+## Toy Tracking in 2D: main_toy_track.py
 
 This script performs tracking of toys in videos. The instruction for dataset preparation and training can be found in [toyTracking/README.md](toyTracking/README.md)
 
@@ -167,9 +169,9 @@ data[frame][view_id] = {
   - `scores`: List of confidence score associated to each bounding box
   - `track_ids`: List of track id associated to each bounding box
 
-## main_2D3D_toys.py
+## Toy Tracking in 3D: main_2D3D_toys.py
 
-This script projects each detected and tracked toys into 3D.
+This script projects each detected and tracked toys from 2D to 3D.
 
 ### Usage
 
