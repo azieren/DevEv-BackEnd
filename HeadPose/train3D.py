@@ -13,11 +13,11 @@ import torch.backends.cudnn as cudnn
 import torch.nn.functional as F
 
 from model import SixDRepNet
-from pose_model import get_pose_net
+from .pose_model import get_pose_net
 import datasets
 from loss import GeodesicLoss, HeadPoseLoss
 
-from MVPose import MVPoseNet
+from .MVPose import MVPoseNet
 import utils
 
 
