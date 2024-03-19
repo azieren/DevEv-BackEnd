@@ -447,7 +447,7 @@ if __name__ == "__main__":
     output_dir = "/nfs/hpc/cn-gpu5/DevEv/headpose_dataset/bodyhead_dataset_quad/"
     videodir = "/nfs/hpc/cn-gpu5/DevEv/dataset/"
     bodydir = "/nfs/hpc/cn-gpu5/DevEv/viz_bodypose/"
-    timestamps = "DevEvData_2023-06-20.csv"
+    timestamps = "DevEvData_2024-02-02.csv"
     mydict={'bodydir':bodydir, 'videodir':videodir}
     
     #extract_unbalance_dataset(mydict, gtdir, timestamps, output_dir = "")

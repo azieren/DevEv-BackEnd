@@ -207,7 +207,7 @@ def main_inference_toy(video_output, timestamps, write=True, output_folder=''):
     VIDEO_PATH = video_output
 
     # Load weights if path provided.
-    model = get_model(CURR_DIR + "/outputs/training/res_3/best_model.pth", DEVICE, NUM_CLASSES)
+    model = get_model(CURR_DIR + "toyModel.pth", DEVICE, NUM_CLASSES)
 
     COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
     assert VIDEO_PATH is not None, 'Please provide path to an input video...'

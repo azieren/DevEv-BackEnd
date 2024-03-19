@@ -93,7 +93,6 @@ def assign_view(preds, views, cam_type, body):
             if p[l,1] < 0.05:
                 temp[l] = 0 
             labels[views == v] = temp
-
     return labels
 
 def read_bodyposes(bodyfile):
@@ -245,10 +244,10 @@ def get_front_classifier(checkpoint = None):
 def prep_features(features, views, ac_label):
     _, D = features.size()
     
-    children_view = views[ac_label == 2]
+    children_view = views[ac_label == 1]
     #print(views, ac_label, children_view, features.size())
     multiview_features = torch.zeros((1,8,D)).float().to(features.device)
-    multiview_features[0, children_view] = features[ac_label == 2]
+    multiview_features[0, children_view] = features[ac_label == 1]
     
     view_onehot = torch.zeros((1,8)).long().to(features.device)
     view_onehot[0, children_view] = 1
@@ -270,7 +269,7 @@ def load_mv_model(model_R, typeview, room, mat):
         
     return model_R
 
-def main_headpose(video_path, timestamps, bbox_path="/nfs/hpc/cn-gpu5/DevEv/viz_bodypose_new/", write = True, output_folder=None):
+def main_headpose(video_path, timestamps, bbox_path="/nfs/hpc/cn-gpu5/DevEv/viz_bodypose/", write = True, output_folder=None):
     cudnn.enabled = True
     gpu = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     #snapshot_path = "6DRepNet_300W_LP_AFLW2000.pth" # bad
@@ -380,6 +379,8 @@ def main_headpose(video_path, timestamps, bbox_path="/nfs/hpc/cn-gpu5/DevEv/viz_
     if cams[current_segment] == 'c':
         curr_cam = cam_mat
     model_R = load_mv_model(model_R, cams[current_segment], snapshot_path, snapshot_path_mat).to(gpu)
+    
+    R = np.array([0.0,0.0,1.0])
     while ret:         
         if count > ends[current_segment]:
             current_segment += 1
@@ -390,6 +391,7 @@ def main_headpose(video_path, timestamps, bbox_path="/nfs/hpc/cn-gpu5/DevEv/viz_
                 if cams[current_segment] == 'c':
                     curr_cam = cam_mat      
                 model_R = load_mv_model(model_R, cams[current_segment], snapshot_path, snapshot_path_mat).to(gpu)
+                R = np.array([0.0,0.0,1.0])
             else:
                 break
         if count > end_all: break
@@ -416,19 +418,7 @@ def main_headpose(video_path, timestamps, bbox_path="/nfs/hpc/cn-gpu5/DevEv/viz_
             body = Image.fromarray(body)
             body = body.convert('RGB')
             input_body.append(transformations(body))
-            
-            #head = box[0]
-            #delta = 10
-            #head[1], head[0] = max(0, head[1]-delta), max(0, head[0]-delta)
-            #head[3], head[2] = min(height, head[3]+delta), min(width, head[2]+delta)
-            #head = frame[head[1]:head[3], head[0]:head[2]]
-            #head = Image.fromarray(head)
-            #head = head.convert('RGB')
-            #head = transformations(head)
-            #input_head.append(transformations(body))
-
-        
-            
+                        
         if len(faces) > 0:
             #input_head = torch.stack(input_head, 0).to(gpu)
             input_body = torch.stack(input_body, 0).to(gpu)
@@ -439,13 +429,11 @@ def main_headpose(video_path, timestamps, bbox_path="/nfs/hpc/cn-gpu5/DevEv/viz_
                 #print(cls_pred)
                 #exit()
                 cls_pred = assign_view(cls_pred, view_list, cams[current_segment], body)
-                feature, view_1hot = prep_features(feature, view_list, cls_pred)         
-                R = model_R(feature, view_1hot).squeeze().cpu().numpy()
-                #cls_pred_front = torch.softmax(fb_Classifier(input_head), dim = -1)
-                #cls_pred_front = cls_pred_front[:, 1]
+                feature, view_1hot = prep_features(feature, view_list, cls_pred)   
+                if view_1hot.sum() > 0:
+                    R = model_R(feature, view_1hot).squeeze().cpu().numpy()
             
             #print('Head pose estimation: %2f ms' % ((end - start)*1000.))
-
             attention = project_att(R, view_list, cls_pred, curr_cam)     
             y_pred_deg, p_pred_deg, r_pred_deg = attention[:,0], attention[:,1], attention[:,2]
                         
@@ -473,7 +461,7 @@ def main_headpose(video_path, timestamps, bbox_path="/nfs/hpc/cn-gpu5/DevEv/viz_
         if count % 500 == 0:
             print("Segment {}/{} - frame {} - Start frame {} - End frame {}".format(current_segment+1, len(starts), 
                     count, starts[current_segment], ends[current_segment]))
-        #if count > starts[0] + 2000: break
+        #if count > starts[0] + 1000: break
 
     if write: out.release()
     video.release()

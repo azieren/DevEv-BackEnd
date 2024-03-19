@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 import re
 import json
+import argparse
 
 def get_timestamp(filename="DevEvData_2023-04-26.csv"):
     with open(filename) as f:
@@ -180,15 +181,21 @@ def process_gt(img_dir, gt_dir, output_gt_dir="gt/", output_img_dir="img/"):
     
     return
 
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input_img_dir', type=str, default="DatasetDetector/images_raw/", help="Path to multiview image folder")
+    parser.add_argument('--input_gt_dir', type=str, default="DatasetDetector/gt_raw/", help="Path to multiview gt folder")
+    parser.add_argument('--output_img_dir', type=str, default="DatasetDetector/gt/", help="Path to single view image folder to write dataset")
+    parser.add_argument('--output_gt_dir', type=str, default="DatasetDetector/img/", help="Path to single view gt folder to write dataset")
+    args = parser.parse_args()
+    
+    return args
+
 if __name__ == "__main__":
-    video_dir = "/nfs/hpc/cn-gpu5/DevEv/dataset/" # output dir to save videos
-    output_dir = "DatasetDetector/images_raw/"
-    gt_dir = "DatasetDetector/gt_raw/"
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-        
+    args = parse_args()
+
     #extract_all(video_dir, output_dir)
-    process_gt(output_dir, gt_dir, output_gt_dir="DatasetDetector/gt/", output_img_dir="DatasetDetector/img/")
+    process_gt(args.input_img_dir, args.input_gt_dir, output_gt_dir=args.output_gt_dir, output_img_dir=args.output_img_dir)
 
 
 

@@ -41,7 +41,7 @@ def process_head(video_info, session, target_dir, path_processed, body_dir, whit
         timestamps = {key: info[key] for key in ['c', 'r', 'p'] if key in info}
         if len(timestamps) == 0: continue
         # Skip mat views
-        if 'c' in  timestamps: continue
+        #if 'c' in  timestamps: continue
         print(name, timestamps)
         if not os.path.exists(video_output):
             print("Downloading {} in {}".format(info["download"]["name"], target_dir))
@@ -135,7 +135,7 @@ def parse_args():
     parser.add_argument('--input_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/dataset/", help="Directory path containing original videos.")
     parser.add_argument('--output_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_headpose/", help="Directory path where head pose files will be written")
     parser.add_argument('--body_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_bodypose/", help="Directory path where body pose files are")
-    parser.add_argument('--timestamps', type=str, default="DevEvData_2023-06-20.csv", help="Path to timestamp file")
+    parser.add_argument('--timestamps', type=str, default="DevEvData_2024-02-02.csv", help="Path to timestamp file")
     parser.add_argument('--uname', type=str, default="azieren@oregonstate.edu", help="Databrary username")
     parser.add_argument('--psswd', type=str, default="changetheworld38", help="Databrary password")
     parser.add_argument('--write', action="store_true", help="If set, a video will be generated alongside the headpose file")

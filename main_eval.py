@@ -5,7 +5,7 @@ from collections import OrderedDict
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-
+import argparse
 from databrary import get_videos
 
 def read_timestamp(filepath="/nfs/hpc/share/azieren/DevEv/DevEvData_2023-06-20.csv"):
@@ -253,16 +253,31 @@ def eval_hands(video_info, session, target_dir, path_processed):
     plt.close()
     return
 
-if __name__ == "__main__":
-    target_dir = "/nfs/hpc/cn-gpu5/DevEv/dataset/" # output dir to save videos
-    timestamps = "DevEvData_2023-05-16.csv"
-    #path_processed = "/nfs/hpc/cn-gpu5/DevEv/viz_attention_class2/"
-    path_processed = "/nfs/hpc/cn-gpu5/DevEv/viz_attention/"
-    uname = 'azieren@oregonstate.edu'
-    psswd = 'changetheworld38'  
-
-    video_info, session = get_videos(uname, psswd, timestamps)
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/dataset/", help="Directory path where 3D pose files will be written")
+    parser.add_argument('--head_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_attention/", help="Directory path where head pose files are")
+    parser.add_argument('--timestamps', type=str, default="DevEvData_2024-02-02.csv", help="Path to timestamp file")
+    parser.add_argument('--uname', type=str, default="azieren@oregonstate.edu", help="Databrary username")
+    parser.add_argument('--psswd', type=str, default="changetheworld38", help="Databrary password")
+    parser.add_argument('--check_time', action="store_true", help="Used only for checking the current amount of frames processed by existing files")
+    parser.add_argument('--video_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/dataset/", help="Directory path containing original videos. Only used with --check_time")
+    args = parser.parse_args()
     
-    eval_head(video_info, session, target_dir, path_processed)
-    eval_hands(video_info, session, target_dir, path_processed)
+    
+    if args.uname == "":
+        print("Enter a Databrary Username")
+        exit()
+    if args.uname == "":
+        print("Enter a Databrary Password")
+        exit()
+    return args
+
+
+if __name__ == "__main__":
+    args = parse_args()
+    video_info, session = get_videos(args.uname, args.psswd, args.timestamps)
+    
+    eval_head(video_info, session, args.input_dir, args.head_dir)
+    eval_hands(video_info, session, args.input_dir, args.head_dir)
 

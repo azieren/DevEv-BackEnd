@@ -244,7 +244,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--input_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_toys/", help="Directory path containing processed videos data of toy tracking.")
     parser.add_argument('--output_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_toys3D/", help="Directory path where toy pose files will be written")
-    parser.add_argument('--timestamps', type=str, default="DevEvData_2023-06-20.csv", help="Path to timestamp file")
+    parser.add_argument('--timestamps', type=str, default="DevEvData_2024-02-02.csv", help="Path to timestamp file")
     parser.add_argument('--uname', type=str, default="azieren@oregonstate.edu", help="Databrary username")
     parser.add_argument('--psswd', type=str, default="changetheworld38", help="Databrary password")
     args = parser.parse_args()

@@ -599,7 +599,7 @@ def parse_args():
     parser.add_argument('--output_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_attention/", help="Directory path where 3D pose files will be written")
     parser.add_argument('--body_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_bodypose/", help="Directory path where body pose files are")
     parser.add_argument('--head_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_headpose/", help="Directory path where head pose files are")
-    parser.add_argument('--timestamps', type=str, default="DevEvData_2023-06-20.csv", help="Path to timestamp file")
+    parser.add_argument('--timestamps', type=str, default="DevEvData_2024-02-02.csv", help="Path to timestamp file")
     parser.add_argument('--uname', type=str, default="azieren@oregonstate.edu", help="Databrary username")
     parser.add_argument('--psswd', type=str, default="changetheworld38", help="Databrary password")
     parser.add_argument('--check_time', action="store_true", help="Used only for checking the current amount of frames processed by existing files")
