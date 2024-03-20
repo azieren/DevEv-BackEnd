@@ -306,7 +306,7 @@ def get_bbox(p2d_info, view, frame_id, data):
         if best_box is not None: break
     return best_box
 
-def generate_helper(frame, mydict):
+def generate_helper(frame, mydict, output_dir):
     frame_id=mydict['frame_id']
     data=mydict['data']
     p2d=mydict['p2d']
@@ -326,7 +326,7 @@ def generate_helper(frame, mydict):
         name = "{}_{}_{}.png".format(name1,frame_id,c)
         patch = frame[y1:y2, x1:x2]
         
-        img_path = os.path.join(output_dir, name)
+        img_path = os.path.join(output_dir+ "/img/", name)
         #if os.path.exists(img_path): continue
         cv2.imwrite(img_path, patch)
         #draw_axis(patch, yaw, pitch, roll, tdx=None, tdy=None, size = 50)
@@ -338,14 +338,14 @@ def generate_helper(frame, mydict):
 def generate_dataset(mydict, gtdir, timestamps, output_dir = ""):
     videodir = mydict['videodir']
     bodydir = mydict['bodydir']
-    if not os.path.exists(output_dir): os.makedirs(output_dir)
+    if not os.path.exists(output_dir + "/img/"): os.makedirs(output_dir+ "/img/")
     video_list = get_gt(gtdir)
     timestamps = get_timestamp(timestamps)
     # Camera Files
     cams_room = np.load("camera_room.npy", allow_pickle=True).item()
     cams_mat = np.load("camera_mat.npy", allow_pickle=True).item()
 
-    gt_dir= os.path.join(output_dir, "../gt_body_quad.txt")
+    gt_dir= os.path.join(output_dir, "gt_headpose.txt")
     mydict['gt_dir']=gt_dir
     
 
@@ -404,10 +404,11 @@ def generate_dataset(mydict, gtdir, timestamps, output_dir = ""):
                 mydict['frame_id'] = frame_id
                 mydict['p3d'] = info["head"]
                 mydict['type'] = 0
-                generate_helper(frame, mydict)  
+                generate_helper(frame, mydict, output_dir)  
                 # return 
             count += 1
         vidcap.release()
+        exit()
     return
 
 def get_cams(frame_id, time_info, cams_room, cams_mat):
@@ -444,9 +445,9 @@ def extract_unbalance_dataset(mydict, gtdir, timestamps, output_dir = ""):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--input_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/dataset/", help="Directory path containing original videos.")
-    parser.add_argument('--output_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_attention/file_merged.txt", help="Directory path where head pose dataset will be written")
+    parser.add_argument('--output_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/headpose_dataset/", help="Directory path where head pose dataset will be written")
     parser.add_argument('--body_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_bodypose/", help="Directory path where body pose files are")
-    parser.add_argument('--corrected_head_dir', type=str, default="corrected_quadrant/", help="Attention files with head orientation to copy from")
+    parser.add_argument('--corrected_head_dir', type=str, default="corrected_quadrant/", help="Attention files with corrected head orientation")
     parser.add_argument('--timestamps', type=str, default="DevEvData_2024-02-02.csv", help="Path to timestamp file")
     args = parser.parse_args()
     return args

@@ -51,11 +51,14 @@ def parse_args():
         '--output_string', dest='output_string',
         help='String appended to output snapshots.', default='Eval_DevEvMat', type=str)
     parser.add_argument(
+        '--setup', dest='setup',
+        help='Mat view or Room view (room/mat)', default='room', type=str)
+    parser.add_argument(
+        '--timestamps', dest='timestamps',
+        help='Path to timestamps file', default="/nfs/hpc/share/azieren/DevEv/DevEvData_2024-02-02.csv", type=str)
+    parser.add_argument(
         '--snapshot', dest='snapshot', help='Path of model snapshot.',
-        #default='', type=str)
-        #default='6DRepNet_70_30_BIWI.pth', type=str)
         default='../BodyPose/infant_w48_384x288.pth', type=str)
-        #default='output/snapshots/DevEv_epoch_95.pth', type=str)
 
     args = parser.parse_args()
     return args
@@ -216,10 +219,10 @@ if __name__ == '__main__':
                                           normalize])
 
     pose_dataset_train = datasets.getDataset(
-        args.dataset, args.data_dir, args.filename_list, transformations, train_mode = True)
+        args.dataset, args.data_dir, args.filename_list, transformations, train_mode = True, setup = args.setup, timestamps=args.timestamps)
 
     pose_dataset_test = datasets.getDataset(
-        args.dataset, args.data_dir, args.filename_list, transformations, train_mode = False)
+        args.dataset, args.data_dir, args.filename_list, transformations, train_mode = False, setup = args.setup, timestamps=args.timestamps)
 
     train_loader = torch.utils.data.DataLoader(
         dataset=pose_dataset_train,

@@ -68,13 +68,13 @@ def read_timestamp(filepath="/nfs/hpc/share/azieren/DevEv/DevEvData_2023-06-20.c
             
     return record
 
-def read_gt_mv(file_path, data_dir, view_mode = "room"):
+def read_gt_mv(file_path, data_dir, timestamps, view_mode = "room"):
     assert view_mode in ["mat", "room", "all"]
     # input:    relative path to .txt file with file names
     # output:   list of relative path names
     MATVIEWS = ["17_03", "19_01", "19_02", "20_02", "20_03", "25_01", "27_01", "29_01", "33_01", "34_02", "34_03", "34_04", "35_01"]
 
-    timestamps = read_timestamp()
+    timestamps = read_timestamp(timestamps)
 
     print(file_path)
     with open(file_path) as f:
@@ -406,72 +406,6 @@ class Pose_300W_LP(Dataset):
         # 122,450
         return self.length
 
-class DevEv(Dataset):
-    def __init__(self, data_dir, filename_path, transform, image_mode='RGB', train_mode=True):
-        self.data_dir = data_dir
-        self.transform = transform
-
-        d = read_gt(filename_path, data_dir, train_mode)
-
-        x_data = d['image']
-        y_data = d['pose']
-        self.X_train = x_data
-        self.y_train = y_data
-        self.image_mode = image_mode
-        self.train_mode = train_mode
-        self.length = len(x_data)
-
-    def __getitem__(self, index):
-        name = os.path.join(self.data_dir, self.X_train[index])
-        img = Image.open(name)
-        img = img.convert(self.image_mode)
-        
-        if "set_" not in name:
-            width, height = img.size
-
-            # Define the percentages for cropping
-            xmin = 0.25 * width
-            ymin = 0.25 * height
-            xmax = 0.75 * width
-            ymax = 0.75 * height
-
-            # Cropped image using percentages
-            img = img.crop((xmin, ymin, xmax, ymax))
-
-        roll = self.y_train[index][2]/180*np.pi
-        yaw = self.y_train[index][0]/180*np.pi
-        pitch = self.y_train[index][1]/180*np.pi
-        cont_labels = torch.FloatTensor([yaw, pitch, roll])
-
-        if self.train_mode:
-            # Flip?
-            rnd = np.random.random_sample()
-            #if rnd < 0.5:
-            #    yaw = -yaw
-            #    roll = -roll
-            #    img = img.transpose(Image.FLIP_LEFT_RIGHT)
-
-            # Blur?
-            rnd = np.random.random_sample()
-            if rnd < 0.05:
-                img = img.filter(ImageFilter.BLUR)
-
-        R = utils.get_R(pitch, yaw, roll)
-
-        labels = torch.FloatTensor([yaw, pitch, roll])
-
-        if self.transform is not None:
-            img = self.transform(img)
-
-
-        # Get target tensors
-        cont_labels = torch.FloatTensor([yaw, pitch, roll])
-        return img, torch.FloatTensor(R), cont_labels, self.X_train[index]
-
-    def __len__(self):
-        # 15,667
-        return self.length
-
 def get_quadrant(gt, num_quadrants):
     # Assuming gt is a 3D normalized vector
     gt = gt/np.linalg.norm(gt)
@@ -489,43 +423,24 @@ def get_quadrant(gt, num_quadrants):
     return theta_quadrant * num_quadrants + phi_quadrant
 
 class DevEvMV(Dataset):
-    def __init__(self, data_dir, filename_path, transform, image_mode='RGB', train_mode=True):
+    def __init__(self, data_dir, filename_path, transform, image_mode='RGB', train_mode=True, setup='room', timestamps="/nfs/hpc/share/azieren/DevEv/DevEvData_2023-06-20.csv"):
         self.data_dir = data_dir
         self.transform = transform
 
-        mode = "room"
+        mode = setup
         #mode = "mat"
-        d = read_gt_mv(filename_path, data_dir, view_mode = mode)
+        d = read_gt_mv(filename_path, data_dir, timestamps, view_mode = mode)
         self.X_train = {}
         count, count_test = 0, 0
 
-        with open("test_data.txt", "r") as f:
-            test_data = [x.replace("\n","") for x in f.readlines()]
-        if mode == "mat": test_data = []
         for i, (n, info) in enumerate(d.items()):
-            if mode == "mat":
-                if i < 0.2*len(d) and not train_mode: 
-                    self.X_train[count_test] = info
-                    count_test += 1
-                elif train_mode: 
-                    self.X_train[count] = info
-                    count += 1
-                continue
-            else:
-                if n in test_data and not train_mode: 
-                    self.X_train[count_test] = info
-                    count_test += 1
-                elif train_mode and n not in test_data: 
-                    self.X_train[count] = info
-                    count += 1
-
-        if train_mode:
-            d = read_gt_mv(filename_path.replace("_new","_quad"), data_dir.replace("_new","_quad"), view_mode = mode)
-            for i, (n, info) in enumerate(d.items()):
+            if i < 0.2*len(d) and not train_mode: 
+                self.X_train[count_test] = info
+                count_test += 1
+            elif train_mode: 
                 self.X_train[count] = info
                 count += 1
 
- 
         num_quad = 4
         quad_hist = {i:[] for i in range(num_quad*num_quad)}
         for index, info in self.X_train.items():
@@ -616,7 +531,7 @@ class DevEvMV(Dataset):
         return self.length
 
    
-def getDataset(dataset, data_dir, filename_list, transformations, train_mode = True):
+def getDataset(dataset, data_dir, filename_list, transformations, train_mode = True, setup = 'room', timestamps=''):
     if dataset == 'Pose_300W_LP':
             pose_dataset = Pose_300W_LP(
                 data_dir, filename_list, transformations)
@@ -632,12 +547,9 @@ def getDataset(dataset, data_dir, filename_list, transformations, train_mode = T
     elif dataset == 'AFW':
         pose_dataset = AFW(
             data_dir, filename_list, transformations)
-    elif dataset == 'DevEv':
-        pose_dataset = DevEv(
-            data_dir, filename_list, transformations, train_mode = train_mode)
     elif dataset == 'DevEvMV':
         pose_dataset = DevEvMV(
-            data_dir, filename_list, transformations, train_mode = train_mode)
+            data_dir, filename_list, transformations, train_mode = train_mode, setup=setup, timestamps=timestamps)
     else:
         raise NameError('Error: not a valid dataset name')
 
