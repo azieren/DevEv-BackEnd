@@ -3,9 +3,11 @@ Implementation of body and head pose estimation of infant, projection of head po
 
 ## Installation
 
-1. Clone the repository:
+1. Create and Activate Environment then Clone the Repository:
 
 ```bash
+conda create -n devev_env
+conda activate devev_env
 git clone https://github.com/azieren/DevEv-BackEnd.git
 cd DevEv-BackEnd
 ```
@@ -35,6 +37,19 @@ Place the downloaded pretrained models in the following directories of this repo
 - Place Child Adult Classifier `childClassifier.pth` in `DevEv-BackEnd/HeadPose/`
 - Place Toy Tracking Model `toyModel.pth` in `DevEv-BackEnd/toyTracking/`
 
+## Inference Pipeline
+
+1. Infant Attention Pipeline
+
+- `main_bodypose.py`: Process the video to get the body bounding box and keypoints of all person in the 8 views
+- `main_headpose.py`: Process the video to track the infant and infer the headpose in 3D
+- `main_2D3D_mv.py`: Project the head and hands and attention in 3D
+
+2. Toy Pipeline
+
+- `main_toy_track.py`: Track the toys in 2D
+- `main_2D3D_toys.py`: Project the centroid of toys from 2D to 3D
+
 ## Recurring Arguments for Inference scripts
 
 These arguments are commonly used across multiple scripts:
@@ -45,6 +60,7 @@ These arguments are commonly used across multiple scripts:
 - `--write`: If set, a video will be generated alongside the corresponding output file with visualization of the type of processed data.
 - `--check_time`: Used only for checking the current amount of frames processed by existing files.
 - `--check_remaining`: Used only for checking the files that have not been processed yet.
+
 
 ## Body Detection and Keypoints: main_bodypose.py
 
