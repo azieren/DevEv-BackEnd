@@ -1,19 +1,9 @@
 import os
 import numpy as np
-<<<<<<< HEAD
 
 from collections import OrderedDict
 import torch
 from torch.utils.data.dataset import Dataset
-=======
-import cv2
-import pandas as pd
-
-import torch
-from torch.utils.data.dataset import Dataset
-from torchvision import transforms
-
->>>>>>> origin/main
 from PIL import Image, ImageFilter
 import utils
 
@@ -27,11 +17,7 @@ def get_list_from_filenames(file_path):
         lines = f.read().splitlines()
     return lines
 
-<<<<<<< HEAD
 def read_gt(file_path, data_dir, train_mode):
-=======
-def read_gt(file_path):
->>>>>>> origin/main
     # input:    relative path to .txt file with file names
     # output:   list of relative path names
     print(file_path)
@@ -40,7 +26,6 @@ def read_gt(file_path):
     
     data = {'image':[], 'pose':[]}
     for l in lines:
-<<<<<<< HEAD
         if len(l) <= 0: continue
         info = l.split(",")
         if len(info) == 8:
@@ -137,12 +122,6 @@ def read_gt_mv(file_path, data_dir, view_mode = "room"):
                            "p3d":p3d}
     #print(data.keys())
     #exit()
-=======
-        name, _, _, _, _, y, p, r = l.split(",")
-        data['image'].append(name)
-        angles = [float(y), float(p), float(r)]
-        data['pose'].append(angles)
->>>>>>> origin/main
     return data
     
 class AFLW2000(Dataset):
@@ -432,7 +411,6 @@ class DevEv(Dataset):
         self.data_dir = data_dir
         self.transform = transform
 
-<<<<<<< HEAD
         d = read_gt(filename_path, data_dir, train_mode)
 
         x_data = d['image']
@@ -494,73 +472,6 @@ class DevEv(Dataset):
         # 15,667
         return self.length
 
-class DevEv3D(Dataset):
-    def __init__(self, data_dir, filename_path, transform, image_mode='RGB', train_mode=True):
-        self.data_dir = data_dir
-        self.transform = transform
-
-=======
->>>>>>> origin/main
-        d = read_gt(filename_path)
-
-        x_data = d['image']
-        y_data = d['pose']
-        self.X_train = x_data
-        self.y_train = y_data
-        self.image_mode = image_mode
-        self.train_mode = train_mode
-        self.length = len(x_data)
-
-    def __getitem__(self, index):
-        img = Image.open(os.path.join(
-            self.data_dir, self.X_train[index]))
-        img = img.convert(self.image_mode)
-
-        roll = self.y_train[index][2]/180*np.pi
-        yaw = self.y_train[index][0]/180*np.pi
-        pitch = self.y_train[index][1]/180*np.pi
-<<<<<<< HEAD
-        cont_labels = torch.FloatTensor([yaw, pitch, roll])
-=======
->>>>>>> origin/main
-
-        if self.train_mode:
-            # Flip?
-            rnd = np.random.random_sample()
-            if rnd < 0.5:
-                yaw = -yaw
-                roll = -roll
-                img = img.transpose(Image.FLIP_LEFT_RIGHT)
-
-            # Blur?
-            rnd = np.random.random_sample()
-            if rnd < 0.05:
-                img = img.filter(ImageFilter.BLUR)
-<<<<<<< HEAD
-
-        R = utils.get_R(pitch, yaw, roll)
-
-        labels = torch.FloatTensor([yaw, pitch, roll])
-
-=======
-                
-        roll = roll *0.0
-        
-        R = utils.get_R(pitch, yaw, roll)
->>>>>>> origin/main
-        if self.transform is not None:
-            img = self.transform(img)
-
-
-        # Get target tensors
-        cont_labels = torch.FloatTensor([yaw, pitch, roll])
-        return img, torch.FloatTensor(R), cont_labels, self.X_train[index]
-
-    def __len__(self):
-        # 15,667
-        return self.length
-
-<<<<<<< HEAD
 def get_quadrant(gt, num_quadrants):
     # Assuming gt is a 3D normalized vector
     gt = gt/np.linalg.norm(gt)
@@ -583,7 +494,7 @@ class DevEvMV(Dataset):
         self.transform = transform
 
         mode = "room"
-        mode = "mat"
+        #mode = "mat"
         d = read_gt_mv(filename_path, data_dir, view_mode = mode)
         self.X_train = {}
         count, count_test = 0, 0
@@ -705,8 +616,6 @@ class DevEvMV(Dataset):
         return self.length
 
    
-=======
->>>>>>> origin/main
 def getDataset(dataset, data_dir, filename_list, transformations, train_mode = True):
     if dataset == 'Pose_300W_LP':
             pose_dataset = Pose_300W_LP(
@@ -725,17 +634,10 @@ def getDataset(dataset, data_dir, filename_list, transformations, train_mode = T
             data_dir, filename_list, transformations)
     elif dataset == 'DevEv':
         pose_dataset = DevEv(
-<<<<<<< HEAD
             data_dir, filename_list, transformations, train_mode = train_mode)
     elif dataset == 'DevEvMV':
         pose_dataset = DevEvMV(
             data_dir, filename_list, transformations, train_mode = train_mode)
-    elif dataset == 'DevEv3D':
-        pose_dataset = DevEv(
-            data_dir, filename_list, transformations, train_mode = train_mode)
-=======
-            data_dir, filename_list, transformations)
->>>>>>> origin/main
     else:
         raise NameError('Error: not a valid dataset name')
 

@@ -12,13 +12,12 @@ from torchvision import transforms
 import torch.backends.cudnn as cudnn
 import torch.nn.functional as F
 
-from model import SixDRepNet
-from .pose_model import get_pose_net
+
+from posenet_model import get_pose_net
 import datasets
 from loss import GeodesicLoss, HeadPoseLoss
 
-from .MVPose import MVPoseNet
-import utils
+from MVPose import MVPoseNet
 
 
 def parse_args():
@@ -55,7 +54,7 @@ def parse_args():
         '--snapshot', dest='snapshot', help='Path of model snapshot.',
         #default='', type=str)
         #default='6DRepNet_70_30_BIWI.pth', type=str)
-        default='../DevEv/BodyPose/infant_w48_384x288.pth', type=str)
+        default='../BodyPose/infant_w48_384x288.pth', type=str)
         #default='output/snapshots/DevEv_epoch_95.pth', type=str)
 
     args = parser.parse_args()
@@ -193,9 +192,7 @@ if __name__ == '__main__':
     
     model = get_pose_net(is_train=False)
 
-    model_R = MVPoseNet(feature_dim=384+17*2) #(feature_dim=2048+6)
-    #model_R = MVPoseNet(feature_dim=17*2)
-    #model_R = MVPoseNet(feature_dim=2048)
+    model_R = MVPoseNet(feature_dim=384+17*2) 
     
     if not args.snapshot == '':
         saved_state_dict = torch.load(args.snapshot)
@@ -282,17 +279,7 @@ if __name__ == '__main__':
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            
-            #pred_mat = torch.matmul(pred_mat, torch.FloatTensor([0,0,1]).cuda(gpu))
-
-            #euler_pred = utils.compute_euler_angles_from_rotation_matrices(pred_mat, use_gpu=True)
-            #euler_gt = utils.compute_euler_angles_from_rotation_matrices(gt_mat, use_gpu=True)        
-            #total += len(euler_pred)
-            
-            #if err is None: 
-                #err = torch.abs(euler_pred - euler_gt).sum(0)*180/np.pi
-            #else: 
-                #err += torch.abs(euler_pred - euler_gt).sum(0)*180/np.pi            
+                     
             err.append(get_angular_error(att_dir, pred_mat).mean())
             loss_sum += loss.item()
             if i % 20 == 0:
@@ -308,13 +295,9 @@ if __name__ == '__main__':
 
         scheduler.step()
         
-        #err_y, err_p, err_r = err[0] / total, err[1] / total, err[2] / total
-        #error_list.append([loss_sum/(i+1), err_y, err_p, err_r])
-        
         error_list.append([loss_sum/(i+1),  sum(err)/len(err)])
         print("Epoch {}, error {:.3f} degrees".format(epoch, error_list[-1][-1]))
-        #print("Error Yaw: {:.2f}, Pitch: {:.2f}, Roll: {:.2f}".format(err_y.item(), err_p.item(), err_r.item()))
-               
+        #print("Error Yaw: {:.2f}, Pitch: {:.2f}, Roll: {:.2f}".format(err_y.item(), err_p.item(), err_r.item()))              
         error = test(test_loader, model, model_R) 
         print("Test Error:", error)
         test_error.append([epoch, error])
@@ -331,10 +314,6 @@ if __name__ == '__main__':
                   )
             best_error = error
         
-
-            
-
-
     #############
     print('Taking snapshot...',
             torch.save({
@@ -365,8 +344,6 @@ if __name__ == '__main__':
     best = np.argmin(error_list[:,1:].sum(-1))
     plt.figure()
     plt.plot(error_list[:,1], label='Error, Best:{:.2f} deg'.format(error_list[best,1]))
-    #plt.plot(error_list[:,2], label='Best Error Pitch:{:.1f} deg'.format(error_list[best,2]))
-    #plt.plot(error_list[:,3], label='Best Error Roll:{:.1f} deg'.format(error_list[best,3]))
     plt.legend(frameon=False)
     plt.savefig('output/snapshots/' + args.output_string + "_MV_error_log.png")
     plt.close()

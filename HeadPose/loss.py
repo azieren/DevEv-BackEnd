@@ -16,3 +16,17 @@ class GeodesicLoss(nn.Module):
         theta = torch.acos(torch.clamp(cos, -1+self.eps, 1-self.eps))
          
         return torch.mean(theta)
+    
+    
+class HeadPoseLoss(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, m1, m2):
+        z = torch.FloatTensor([0.0,0.0,1.0]).to(m1.device)
+
+        m = torch.matmul(m1 - m2, z.view(3,1)) #batch*3*1
+        #print(m.size())
+        m = torch.norm(m.squeeze(-1), dim = -1)
+         
+        return torch.mean(m)

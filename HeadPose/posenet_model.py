@@ -14,9 +14,14 @@ import logging
 import torch
 import torch.nn as nn
 import torch.backends.cudnn as cudnn
-from .utils import get_max_preds
-from .pose_cfg import _C as cfg
-from .pose_cfg import update_config
+try:
+    from .utils import get_max_preds
+    from .pose_cfg import _C as cfg
+    from .pose_cfg import update_config
+except:
+    from utils import get_max_preds
+    from pose_cfg import _C as cfg
+    from pose_cfg import update_config    
 
 BN_MOMENTUM = 0.1
 logger = logging.getLogger(__name__)
@@ -547,7 +552,10 @@ def get_pose_net(is_train, **kwargs):
     cudnn.benchmark = cfg.CUDNN.BENCHMARK
     torch.backends.cudnn.deterministic = cfg.CUDNN.DETERMINISTIC
     torch.backends.cudnn.enabled = cfg.CUDNN.ENABLED
-    update_config(cfg, "./HeadPose/pose_cfg.yaml")
+    try:
+        update_config(cfg, "./HeadPose/pose_cfg.yaml")
+    except:
+        update_config(cfg, "pose_cfg.yaml")
     model = PoseHighResolutionNet(cfg, **kwargs)
 
     if is_train and cfg['MODEL']['INIT_WEIGHTS']:
