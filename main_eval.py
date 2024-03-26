@@ -268,7 +268,7 @@ def parse_args():
     if args.uname == "":
         print("Enter a Databrary Username")
         exit()
-    if args.uname == "":
+    if args.psswd == "":
         print("Enter a Databrary Password")
         exit()
     return args

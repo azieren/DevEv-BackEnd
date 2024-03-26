@@ -606,8 +606,8 @@ def parse_args():
     parser.add_argument('--body_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_bodypose/", help="Directory path where body pose files are")
     parser.add_argument('--head_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_headpose/", help="Directory path where head pose files are")
     parser.add_argument('--timestamps', type=str, default="DevEvData_2024-02-02.csv", help="Path to timestamp file")
-    parser.add_argument('--uname', type=str, default="azieren@oregonstate.edu", help="Databrary username")
-    parser.add_argument('--psswd', type=str, default="changetheworld38", help="Databrary password")
+    parser.add_argument('--uname', type=str, default="", help="Databrary username")
+    parser.add_argument('--psswd', type=str, default="", help="Databrary password")
     parser.add_argument('--check_time', action="store_true", help="Used only for checking the current amount of frames processed by existing files")
     parser.add_argument('--video_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/dataset/", help="Directory path containing original videos. Only used with --check_time")
     parser.add_argument('--session', default = "", type=str, help="If used, only this session will be processed. Format: session and subject number ##_##")
@@ -617,7 +617,7 @@ def parse_args():
     if args.uname == "":
         print("Enter a Databrary Username")
         exit()
-    if args.uname == "":
+    if args.psswd == "":
         print("Enter a Databrary Password")
         exit()
     sess_name = re.findall(r'\d\d_\d\d', args.session)

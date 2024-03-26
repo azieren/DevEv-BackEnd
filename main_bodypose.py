@@ -126,7 +126,7 @@ def parse_args():
     if args.uname == "":
         print("Enter a Databrary Username")
         exit()
-    if args.uname == "":
+    if args.psswd == "":
         print("Enter a Databrary Password")
         exit()    
     sess_name = re.findall(r'\d\d_\d\d', args.session)

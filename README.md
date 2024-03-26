@@ -43,7 +43,7 @@ Place the downloaded pretrained models in the following directories of this repo
 - `main_bodypose.py`: Process the video to get the body bounding box and keypoints of all person in the 8 views
 - `main_headpose.py`: Process the video to track the infant and infer the headpose in 3D
 - `main_2D3D_mv.py`: Project the head and hands and attention in 3D
-- `main_3Dcone_collision.py`: Model the attention as a cone project in 3D to capture collision between attention and room/toys
+- `main_3Dcone_collision.py`: Model the attention as a cone projected in 3D to capture collision between attention and room/toys
 
 2. Toy Pipeline
 
