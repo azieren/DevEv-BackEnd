@@ -134,6 +134,12 @@ def get_processed_toy(path = "HeadPose/output"):
     end = ".npy"
     return [ f for f in os.listdir(path) if f.endswith(end) ]
 
+def get_processed_cone(path = "HeadPose/output"):
+    # soft = True  reprocess unfinished files
+    # soft = False remove fully processed files
+    end = ".txt"
+    return [ f for f in os.listdir(path) if f.endswith(end) ]
+
 
 def get_processed_body(path = "BodyPose/output", soft = True):
     # soft = True  reprocess unfinished files

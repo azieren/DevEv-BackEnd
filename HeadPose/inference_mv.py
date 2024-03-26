@@ -12,7 +12,8 @@ import torch.backends.cudnn as cudnn
 from scipy.spatial.transform import Rotation  
 
 from . import utils
-from .model import SixDRepNet, MVPoseNet
+from .model import SixDRepNet
+from .MVPose import MVPoseNet
 from torchvision import transforms, models
 
 

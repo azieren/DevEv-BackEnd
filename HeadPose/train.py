@@ -55,7 +55,7 @@ def parse_args():
         help='Mat view or Room view (room/mat)', default='room', type=str)
     parser.add_argument(
         '--timestamps', dest='timestamps',
-        help='Path to timestamps file', default="/nfs/hpc/share/azieren/DevEv/DevEvData_2024-02-02.csv", type=str)
+        help='Path to timestamps file', default="../DevEvData_2024-02-02.csv", type=str)
     parser.add_argument(
         '--snapshot', dest='snapshot', help='Path of model snapshot.',
         default='../BodyPose/infant_w48_384x288.pth', type=str)

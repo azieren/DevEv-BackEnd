@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import argparse
 
@@ -23,14 +24,13 @@ def process_toys(video_info, session, target_dir, path_processed, whitelist = No
         # Select only first half of available files
         if whitelist is not None:
             if not name in whitelist: continue
+        else:
+            # Check if video has been already processed
+            processed = get_processed_toy(path=path_processed)
+            if any(name in p for p in processed): continue
+       
         if not "download" in info: continue
         
-        #if name not in SUBLIST: continue
-
-        # Check if video has been already processed
-        processed = get_processed_toy(path=path_processed)
-        if any(name in p for p in processed): continue
-       
         # Download video
         video_output = os.path.join(target_dir, "{}.{}".format(info["download"]["name"], info["download"]["format"]))
         timestamps = {key: info[key] for key in ['c', 'r', 'p'] if key in info}
@@ -52,9 +52,10 @@ def parse_args():
     parser.add_argument('--input_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/dataset/", help="Directory path containing original videos.")
     parser.add_argument('--output_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_toys/", help="Directory path where toy pose files will be written")
     parser.add_argument('--timestamps', type=str, default="DevEvData_2024-02-02.csv", help="Path to timestamp file")
-    parser.add_argument('--uname', type=str, default="azieren@oregonstate.edu", help="Databrary username")
-    parser.add_argument('--psswd', type=str, default="changetheworld38", help="Databrary password")
+    parser.add_argument('--uname', type=str, default="", help="Databrary username")
+    parser.add_argument('--psswd', type=str, default="", help="Databrary password")
     parser.add_argument('--write', action="store_true", help="If set, a video will be generated alongside the toy file")
+    parser.add_argument('--session', default = "", type=str, help="If used, only this session will be processed. Format: session and subject number ##_##")
     args = parser.parse_args()
     
     if args.uname == "":
@@ -63,11 +64,16 @@ def parse_args():
     if args.uname == "":
         print("Enter a Databrary Password")
         exit()
+    sess_name = re.findall(r'\d\d_\d\d', args.session)
+    if len(sess_name) == 0:
+        args.session = None
+    else:
+        args.session = sess_name[0]
     return args
 
 if __name__ == "__main__":
     args = parse_args()     
     video_info, session = get_videos(args.uname, args.psswd, args.timestamps)
-    process_toys(video_info, session, args.input_dir, args.output_dir, whitelist = None, write = args.write)
+    process_toys(video_info, session, args.input_dir, args.output_dir, whitelist = args.session, write = args.write)
 
 

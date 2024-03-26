@@ -1,4 +1,5 @@
 import os
+import re
 import numpy as np
 import cv2
 from scipy import interpolate
@@ -157,7 +158,7 @@ def smooth_3D(poses_3D, filter_t = 7.0, theta_v = 0.01, w = 16):
         last_p = copy.deepcopy(poses_3D[f]["p3d"] ) 
     return poses_3D
 
-def main_3dproj_toys(info, datapath, timestamps,  output_file = "temp.txt"):
+def main_3dproj_toys(info, datapath, timestamps,  output_file = "temp.npy"):
     cam_mat = np.load("camera_mat.npy", allow_pickle = True).item()
     cam_room = np.load("camera_room.npy", allow_pickle = True).item()
 
@@ -211,25 +212,24 @@ def main_3dproj_toys(info, datapath, timestamps,  output_file = "temp.txt"):
     return 
 
 
-def process_toys(video_info, path_processed, output_dir):
+def process_toys(video_info, path_processed, output_dir, whitelist=None):
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
     for name, info in video_info.items():
-        # Select only first half of available files
-        if not name in SUBLIST: continue
-        if not "download" in info: 
-            print(name, " could not download")
-            continue
-
-        # Check if video has been already processed
         filename = os.path.join(path_processed, info["download"]["name"] + "_toys.npy")
         output_file = os.path.join(output_dir, info["download"]["name"] + "_toys3D.npy")
         if not os.path.exists(filename):
+            continue       
+        if not "download" in info: 
+            print(name, " could not download")
             continue
-        if os.path.exists(output_file):
-            continue
+        if whitelist is not None:
+            if not name in whitelist: continue
+        else:
+            # Check if video has been already processed
+            if os.path.exists(output_file): continue
                 
         # Download video
         timestamps = {key: info[key] for key in ['c', 'r', 'p'] if key in info}
@@ -242,11 +242,12 @@ def process_toys(video_info, path_processed, output_dir):
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_toys/", help="Directory path containing processed videos data of toy tracking.")
+    parser.add_argument('--toy_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_toys/", help="Directory path containing processed videos data of toy tracking.")
     parser.add_argument('--output_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/viz_toys3D/", help="Directory path where toy pose files will be written")
     parser.add_argument('--timestamps', type=str, default="DevEvData_2024-02-02.csv", help="Path to timestamp file")
-    parser.add_argument('--uname', type=str, default="azieren@oregonstate.edu", help="Databrary username")
-    parser.add_argument('--psswd', type=str, default="changetheworld38", help="Databrary password")
+    parser.add_argument('--uname', type=str, default="", help="Databrary username")
+    parser.add_argument('--psswd', type=str, default="", help="Databrary password")
+    parser.add_argument('--session', default = "", type=str, help="If used, only this session will be processed. Format: session and subject number ##_##")
     args = parser.parse_args()
     
     if args.uname == "":
@@ -255,9 +256,14 @@ def parse_args():
     if args.uname == "":
         print("Enter a Databrary Password")
         exit()
+    sess_name = re.findall(r'\d\d_\d\d', args.session)
+    if len(sess_name) == 0:
+        args.session = None
+    else:
+        args.session = sess_name[0]
     return args
 
 if __name__ == "__main__":
     args = parse_args()
     video_info, session = get_videos(args.uname, args.psswd, args.timestamps)
-    process_toys(video_info, args.input_dir, args.output_dir)
+    process_toys(video_info, args.input_dir, args.toy_dir, whitelist = args.session)

@@ -1,4 +1,5 @@
 import os
+import re
 import numpy as np
 import cv2
 from scipy import interpolate
@@ -507,7 +508,7 @@ def write_attention(poses_3D, output_file):
 
         return
     
-def process_attention(video_info, path_processed):
+def process_attention(video_info, path_processed, whitelist=None):
     if not os.path.exists(path_processed):
         os.makedirs(path_processed)
 
@@ -519,10 +520,12 @@ def process_attention(video_info, path_processed):
             continue
         if not "head" in info: continue
         if not info["head"]: continue
-        
-        # Check if video has been already processed
-        processed = get_processed_head(path=path_processed)
-        if any(name in p for p in processed): continue
+        if whitelist is not None:
+            if not name in whitelist: continue
+        else:
+            # Check if video has been already processed
+            processed = get_processed_head(path=path_processed)
+            if any(name in p for p in processed): continue
         
         # Download video
         timestamps = {key: info[key] for key in ['c', 'r', 'p'] if key in info}
@@ -558,20 +561,21 @@ def check_timestamps(video_info, target_dir, path_processed):
     for name, info in video_info.items():
         if not "download" in info: 
             print(name, " could not download")
-            wrong_files.append(info["download"]["name"])
+            wrong_files.append((name, " could not download"))
             continue
 
         bodytxt = os.path.join(path_processed, "attC_" + info["download"]["name"] + ".txt")
-        if not os.path.exists(bodytxt): 
-            print(info["download"]["name"], "not found")
-            wrong_files.append(info["download"]["name"])
-            continue
         video_output = os.path.join(target_dir, "{}.{}".format(info["download"]["name"], info["download"]["format"]))
         vidcap = cv2.VideoCapture(video_output)
         fps = vidcap.get(cv2.CAP_PROP_FPS)
         timestamps = {key: info[key] for key in ['c', 'r', 'p'] if key in info}
-        
-        
+        if len(timestamps) == 0:
+            wrong_files.append((name, "no timestamps"))
+            continue
+        if not os.path.exists(bodytxt): 
+            wrong_files.append((name, "no att file"))
+            continue
+                
         with open(bodytxt, "r") as f:
             body = f.readlines()        
         frames = set([int(x.split(",")[0]) for x in body if len(x) > 0])
@@ -581,10 +585,12 @@ def check_timestamps(video_info, target_dir, path_processed):
                 start, end = int(fps*s/1000), int(fps*e/1000)
                 if end - start < 10: continue
                 sublist_frames = sorted([f for f in frames if start<=f<=end])
-                
-                diff = 100*len(sublist_frames)/ (end-start+1)
+                if len(sublist_frames) == 0: diff = 0.0
+                else:
+                    L = max(sublist_frames) - min(sublist_frames)
+                    diff = 100*L/ (end-start+1)
                 if diff < 95.0: 
-                    wrong_files.append(info["download"]["name"])
+                    wrong_files.append((name, diff))
                     print("Last wrong")
                     print(info["download"]["name"], n, start, end, diff, len(sublist_frames))
                     continue
@@ -604,6 +610,7 @@ def parse_args():
     parser.add_argument('--psswd', type=str, default="changetheworld38", help="Databrary password")
     parser.add_argument('--check_time', action="store_true", help="Used only for checking the current amount of frames processed by existing files")
     parser.add_argument('--video_dir', type=str, default="/nfs/hpc/cn-gpu5/DevEv/dataset/", help="Directory path containing original videos. Only used with --check_time")
+    parser.add_argument('--session', default = "", type=str, help="If used, only this session will be processed. Format: session and subject number ##_##")
     args = parser.parse_args()
     
     
@@ -613,6 +620,11 @@ def parse_args():
     if args.uname == "":
         print("Enter a Databrary Password")
         exit()
+    sess_name = re.findall(r'\d\d_\d\d', args.session)
+    if len(sess_name) == 0:
+        args.session = None
+    else:
+        args.session = sess_name[0]
     return args
 
 
@@ -621,10 +633,10 @@ if __name__ == "__main__":
     args = parse_args()
     video_info, session = get_videos(args.uname, args.psswd, args.timestamps)
     video_info = add_body_head(video_info, args.body_dir, args.head_dir)
-    
+
     if args.check_time:
         check_timestamps(video_info, args.video_dir, args.output_dir)
         exit()    
-    process_attention(video_info, args.output_dir)
+    process_attention(video_info, args.output_dir, whitelist = args.session)
     
     #process_view_count(video_info)

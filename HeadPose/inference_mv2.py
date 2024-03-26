@@ -10,10 +10,10 @@ from torchvision import transforms
 import torch.nn as nn
 import torch.backends.cudnn as cudnn
 from scipy.spatial.transform import Rotation  
+from torchvision import transforms, models
 
 from . import utils
 from .MVPose import MVPoseNet
-from torchvision import transforms, models
 from .posenet_model import get_pose_net
 
 transformations = transforms.Compose([transforms.Resize((224,224)),

@@ -52,6 +52,6 @@ python train_head_pose.py --gpu 0 --num_epochs 50 --batch_size 64 --lr 0.00008 -
 - `filename_list`: Path to a text file containing path to ground truth head poses (default: '/nfs/hpc/cn-gpu5/DevEv/headpose_dataset/gt_body_new.txt').
 - `output_string`: String appended to output snapshots during training (default: 'Eval_DevEvMat').
 - `setup`: Type of camera setup ('room' or 'mat') (default: 'room').
-- `timestamps`: Path to the timestamps file (default: "/nfs/hpc/share/azieren/DevEv/DevEvData_2024-02-02.csv").
+- `timestamps`: Path to the timestamps file (default: "DevEvData_2024-02-02.csv").
 - `snapshot`: Path of the model snapshot to initialize the bodypose model in training (default: '../BodyPose/infant_w48_384x288.pth').
 

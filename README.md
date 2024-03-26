@@ -9,7 +9,6 @@ Implementation of body and head pose estimation of infant, projection of head po
 conda create -n devev_env
 conda activate devev_env
 git clone https://github.com/azieren/DevEv-BackEnd.git
-cd DevEv-BackEnd
 ```
 
 2. Navigate to the repository directory and install the required dependencies using pip:
@@ -50,16 +49,24 @@ Place the downloaded pretrained models in the following directories of this repo
 - `main_toy_track.py`: Track the toys in 2D
 - `main_2D3D_toys.py`: Project the centroid of toys from 2D to 3D
 
+3. Other
+
+- `calibration.py`: Used for generating camera parameters for calibration
+- `main_eval.py`: Used for evaluating error between 2 set of files containing data on the same sessions
+- `make_dataset_bodypose`: Used for training the headpose model (see [here](HeadPose/README.md))
+
 ## Recurring Arguments for Inference scripts
 
 These arguments are commonly used across multiple scripts:
-
-- `--timestamps TIMESTAMP_FILE`: Path to the timestamp file, it set by default to "DevEvData_2023-06-20.csv".
+- `--input_dir INPUT_DIR`: Path to the folder containing raw video files (if a video is missing it will be automatically downloaded from databrary)
+- `--output_dir OUTPUT_DIR`: Path to folder where write results
+- `--timestamps TIMESTAMP_FILE`: Path to the timestamp file, set by default to "DevEvData_2023-06-20.csv".
 - `--uname USERNAME`: Databrary username.
 - `--psswd PASSWORD`: Databrary password.
 - `--write`: If set, a video will be generated alongside the corresponding output file with visualization of the type of processed data.
 - `--check_time`: Used only for checking the current amount of frames processed by existing files.
 - `--check_remaining`: Used only for checking the files that have not been processed yet.
+- `--session`: Used only processing a single video using the format ##_## (session and subject number).
 
 
 ## Body Detection and Keypoints: main_bodypose.py
@@ -69,7 +76,7 @@ This script performs body pose estimation on videos and generates body pose file
 ### Usage
 
 ```bash
-python main_bodypose.py [--input_dir INPUT_DIR] [--output_dir OUTPUT_DIR] [--timestamps TIMESTAMP_FILE] [--uname USERNAME] [--psswd PASSWORD] [--write] [--check_time] [--check_remaining]
+python main_bodypose.py [--input_dir INPUT_DIR] [--output_dir OUTPUT_DIR] [--timestamps TIMESTAMP_FILE] [--uname USERNAME] [--psswd PASSWORD] [--write] [--check_time] [--check_remaining] [--session SESSION]
 ```
 
 #### Example
@@ -106,7 +113,7 @@ While the main script only does inference, it is also possible to retrain a new 
 ### Usage
 
 ```bash
-python main_head.py [--input_dir INPUT_DIR] [--output_dir OUTPUT_DIR] [--body_dir BODY_DIR] [--timestamps TIMESTAMP_FILE] [--uname USERNAME] [--psswd PASSWORD] [--write] [--check_time] [--check_remaining]
+python main_head.py [--input_dir INPUT_DIR] [--output_dir OUTPUT_DIR] [--body_dir BODY_DIR] [--timestamps TIMESTAMP_FILE] [--uname USERNAME] [--psswd PASSWORD] [--write] [--check_time] [--check_remaining] [--session SESSION]
 ```
 
 #### Example
@@ -116,9 +123,9 @@ python main_head.py --input_dir /path/to/videos/ --output_dir /path/to/output/ -
 
 ### Output
 For each video, a .txt file will be written  where each rows have the following information: 
-(count, label, x_min, y_min, x_max, y_max,, R_x, R_y, R_z)
+(frame, label, x_min, y_min, x_max, y_max,, R_x, R_y, R_z)
 
-1. **TXT File**: For each video, a .txt file will be written with the following format:
+1. **TXT File**: For each video, a .txt file will be written where each row has the following format:
     - `frame`: Frame number.
     - `label`: Adult/Child label.
     - `x_min`, `y_min`, `x_max`, `y_max`: Head bounding box coordinate
@@ -132,7 +139,7 @@ This script takes as input the output from `main_headpose.py` and projects the h
 ### Usage
 
 ```bash
-python main_2D3D_mv.py [--output_dir OUTPUT_DIR] [--body_dir BODY_DIR] [--head_dir HEAD_DIR] [--timestamps TIMESTAMP_FILE] [--uname USERNAME] [--psswd PASSWORD] [--check_time] [--video_dir VIDEO_DIR]
+python main_2D3D_mv.py [--output_dir OUTPUT_DIR] [--body_dir BODY_DIR] [--head_dir HEAD_DIR] [--timestamps TIMESTAMP_FILE] [--uname USERNAME] [--psswd PASSWORD] [--check_time] [--video_dir VIDEO_DIR] [--session SESSION]
 ```
 
 #### Example
@@ -141,7 +148,7 @@ python main_2D3D_mv.py --output_dir /path/to/output/ --body_dir /path/to/bodypos
 ```
 
 ### Output
-1. **TXT File**: For each video, a .txt file will be written with the following format: 
+1. **TXT File**: For each video, a .txt file will be written where each row has the following format: 
 (frame, flag_a, flag_h, head_x, head_y, head_z, att_x, att_y, att_z, handL_x, handL_y, handL_z, handR_x, handR_y, handR_z)
     - `frame`: Frame number.
     - `flag_a`=0: Placeholder flag telling whether the attention/head position has been corrected in the frame (set to zero)
@@ -158,7 +165,7 @@ This script performs tracking of toys in videos. The instruction for dataset pre
 ### Usage
 
 ```bash
-python main_toy_track.py [--input_dir INPUT_DIR] [--output_dir OUTPUT_DIR] [--timestamps TIMESTAMP_FILE] [--uname USERNAME] [--psswd PASSWORD] [--write]
+python main_toy_track.py [--input_dir INPUT_DIR] [--output_dir OUTPUT_DIR] [--timestamps TIMESTAMP_FILE] [--uname USERNAME] [--psswd PASSWORD] [--write] [--session SESSION]
 ```
 
 #### Example
@@ -192,7 +199,7 @@ This script projects each detected and tracked toys from 2D to 3D.
 ### Usage
 
 ```bash
-python main_2D3D_toys.py [--input_dir INPUT_DIR] [--output_dir OUTPUT_DIR] [--timestamps TIMESTAMP_FILE] [--uname USERNAME] [--psswd PASSWORD]
+python main_2D3D_toys.py [--toy_dir TOY_DIR] [--output_dir OUTPUT_DIR] [--timestamps TIMESTAMP_FILE] [--uname USERNAME] [--psswd PASSWORD] [--session SESSION]
 ```
 
 #### Example
@@ -212,4 +219,4 @@ toy_data[toy_name][frame] = {
   - `toy_name`: Name of the toy considered.
   - `frame`: Frame number.
   - `p3d`: 3D location of the toy in a frame
-  - `track`: list of availbale tracklet for this toy
+  - `track`: list of tracklets for this toy
