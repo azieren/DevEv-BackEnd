@@ -43,6 +43,7 @@ Place the downloaded pretrained models in the following directories of this repo
 - `main_bodypose.py`: Process the video to get the body bounding box and keypoints of all person in the 8 views
 - `main_headpose.py`: Process the video to track the infant and infer the headpose in 3D
 - `main_2D3D_mv.py`: Project the head and hands and attention in 3D
+- `main_3Dcone_collision.py`: Model the attention as a cone project in 3D to capture collision between attention and room/toys
 
 2. Toy Pipeline
 
@@ -66,7 +67,7 @@ These arguments are commonly used across multiple scripts:
 - `--write`: If set, a video will be generated alongside the corresponding output file with visualization of the type of processed data.
 - `--check_time`: Used only for checking the current amount of frames processed by existing files.
 - `--check_remaining`: Used only for checking the files that have not been processed yet.
-- `--session`: Used only processing a single video using the format ##_## (session and subject number).
+- `--session`: Used only for processing a single video, use the format ##_## (session and subject number) to specify which video to process.
 
 
 ## Body Detection and Keypoints: main_bodypose.py
@@ -220,3 +221,32 @@ toy_data[toy_name][frame] = {
   - `frame`: Frame number.
   - `p3d`: 3D location of the toy in a frame
   - `track`: list of tracklets for this toy
+
+## Cone and moving room collision in 3D: main_3Dcone_collision.py
+
+This script takes as input the output from `main_2D3D_mv.py` and `main_2D3D_toys.py`, and projects the lines belonging to a cone into the room while updating toys locations. It uses the 3D model of the room to compute collision between the attention and the room for computing the attention point and the toy tracking results to update position of toys.
+
+### Usage
+
+```bash
+python main_3Dcone_collision.py [--output_dir OUTPUT_DIR] [--att_dir ATT_DIR] [--toy_dir TOY_DIR] [--cone_angle CONE_ANGLE] [--n_lines N_LINES] [--session SESSION]
+```
+
+- `cone_angle`: Angle of the cone in degree (from 0 to 90 degrees)
+- `n_lines`: Number of lines to sample uniformly in the cone
+- `att_dir`: Directory where attention files are saved
+- `toy_dir`: Directory where toy 3D centroid locations files are saved
+
+#### Example
+```bash
+python main_3Dcone_collision.py --output_dir /path/to/output/ --att_dir /path/to/attention/ --toy_dir /path/to/3Dtoy/ --cone_angle 40 --n_lines 100
+```
+
+### Output
+1. **TXT File**: For each video, a .txt file will be written where each row has the following format: 
+(frame, line id, object name, att_x, att_y, att_z, head_x, head_y, head_z, )
+    - `frame`: Frame number.
+    - `line id`: Line id that was sample from the cone and projected into the room
+    - `object name`: Object name the line collided with
+    - `att_x`, `att_y`, `att_z`: Projected attention point location in 3D. (x,y,z) the line collided with
+    - `head_x`, `head_y`, `head_z`: Projected head location in 3D. (x,y,z)
