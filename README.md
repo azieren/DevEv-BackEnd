@@ -1,5 +1,9 @@
 # DevEv-BackEnd
-Implementation of body and head pose estimation of infant, projection of head pose and toys in 3D, toy tracking by detection, and child/adult classifier
+Implementation of body, head pose, and attention estimation of infant, projection of head pose and toys in 3D, toy tracking by detection, and child/adult classifier.
+
+This code is the official repository for the ICDL 2024 [publication]():
+`Infants’ Developing Environment: Integration of Computer Vision and Human Annotation to Quantify Where Infants Go, What They Touch, and What They See ` from Han et al.
+
 
 ## Installation
 
