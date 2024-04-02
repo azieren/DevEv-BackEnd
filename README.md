@@ -167,14 +167,14 @@ python main_2D3D_mv.py --output_dir /path/to/output/ --body_dir /path/to/bodypos
    
 (frame, flag_a, flag_h, head_x, head_y, head_z, R_x, R_y, R_z, att_x, att_y, att_z, handL_x, handL_y, handL_z, handR_x, handR_y, handR_z)
 
-    - `frame`: Frame number.
-    - `flag_a`=0: Placeholder flag telling whether the attention/head position has been corrected in the frame (set to zero)
-    - `flag_h`=0: Placeholder flag telling whether a hand position has been corrected in the frame (set to zero)
-    - `head_x`, `head_y`, `head_z`: Projected head location in 3D. (x,y,z)
-    - `R_x`, `R_y`, `R_z`: Head orientation as a 3D vector associated to the head bounding box
-    - `att_x`, `att_y`, `att_z`: Projected attention point location in 3D. (x,y,z)
-    - `handL_x`, `handL_y`, `handL_z`: Projected left hand location in 3D. (x,y,z)
-    - `handR_x`, `handR_y`, `handR_z`: Projected right hand location in 3D. (x,y,z)
+ - `frame`: Frame number.
+ - `flag_a`=0: Placeholder flag telling whether the attention/head position has been corrected in the frame (set to zero)
+ - `flag_h`=0: Placeholder flag telling whether a hand position has been corrected in the frame (set to zero)
+ - `head_x`, `head_y`, `head_z`: Projected head location in 3D. (x,y,z)
+ - `R_x`, `R_y`, `R_z`: Head orientation as a 3D vector associated to the head bounding box
+ - `att_x`, `att_y`, `att_z`: Projected attention point location in 3D. (x,y,z)
+ - `handL_x`, `handL_y`, `handL_z`: Projected left hand location in 3D. (x,y,z)
+ - `handR_x`, `handR_y`, `handR_z`: Projected right hand location in 3D. (x,y,z)
 
 ## Toy Tracking in 2D: main_toy_track.py
 
