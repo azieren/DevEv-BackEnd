@@ -64,6 +64,7 @@ Place the downloaded pretrained models in the following directories of this repo
 3. Other
 
 - `calibration.py`: Used for generating camera parameters for calibration
+- `merge_attention.py`: Used for merging head/wrists position from one file and attention from another file
 - `main_eval.py`: Used for evaluating error between 2 set of files containing data on the same sessions
 - `make_dataset_bodypose`: Used for training the headpose model (see [here](HeadPose/README.md))
 
@@ -266,3 +267,14 @@ python main_3Dcone_collision.py --output_dir /path/to/output/ --att_dir /path/to
     - `object name`: Object name the line collided with
     - `att_x`, `att_y`, `att_z`: Projected attention point location in 3D. (x,y,z) the line collided with
     - `head_x`, `head_y`, `head_z`: Projected head location in 3D. (x,y,z)
+
+## Merging 2 files
+
+
+```bash
+python merge_attention.py --output_file /path/to/output/file.txt --head_pos /path/to/attention1.txt --head_or /path/to/attention2.txt
+```
+
+- `output_file`: Directory path where 3D pose files will be written
+- `head_pos`: Attention files with head and hand position to copy from
+- `head_or`: Attention files with head orientation to copy from
