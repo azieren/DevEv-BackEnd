@@ -7,7 +7,7 @@ Implementation of Computer Vision algorithms for:
 - Infants's head location, wrists location and head pose estimation
 - Toys tracking in 2D 
 - 2D-3D Projection of head/wrist location and toys locations
-(- Collision between the visual cone (based on head location and pose estimation) and the room (with updated movable toys location in 3D), for computing what infants see in every frames)
+<- Collision between the visual cone (based on head location and pose estimation) and the room (with updated movable toys location in 3D), for computing what infants see in every frames>
 
 ## Installation
 
