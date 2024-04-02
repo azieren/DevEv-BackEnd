@@ -270,11 +270,17 @@ python main_3Dcone_collision.py --output_dir /path/to/output/ --att_dir /path/to
 
 ## Merging 2 files
 
+This script takes as input 2 attention files output from `main_2D3D_mv.py` and merge the head and wrists location from one file with the head pose of the other file.
 
+### Usage
 ```bash
-python merge_attention.py --output_file /path/to/output/file.txt --head_pos /path/to/attention1.txt --head_or /path/to/attention2.txt
+python merge_attention.py [--output_file OUTPUT_FILE] [--head_pos HEAD_POS] [--head_or HEAD_OR] 
 ```
-
 - `output_file`: Directory path where 3D pose files will be written
 - `head_pos`: Attention files with head and hand position to copy from
 - `head_or`: Attention files with head orientation to copy from
+
+#### Example
+```bash
+python merge_attention.py --output_file /path/to/output/file.txt --head_pos /path/to/attention1.txt --head_or /path/to/attention2.txt
+```
