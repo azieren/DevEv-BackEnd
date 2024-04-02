@@ -8,6 +8,8 @@ Implementation of Computer Vision algorithms for:
 - Toys tracking in 2D 
 - 2D-3D Projection of head/wrist location and toys locations
 
+The annotation tool for visualizing and modifying head/wrists/attention is availbale publically on [here](https://github.com/azieren/DevEv)
+
 ## Installation
 
 1. Create and Activate Environment then Clone the Repository:
