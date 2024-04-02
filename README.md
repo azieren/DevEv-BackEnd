@@ -111,8 +111,8 @@ For each video, two files will be written:
     - `frame`: Frame number.
     - `b_id`: Body ID.
     - `x_min`, `y_min`, `x_max`, `y_max`: Bounding box coordinates.
-    - `x_l`, `y_l`: 2D Position for keypoint "left ankle".
-    - `x_n`, `y_n`: 2D Position for keypoint "nose" .
+    - `x_l`, `y_l`: 2D Position for keypoint "left ankle". (unused in final analysis)
+    - `x_n`, `y_n`: 2D Position for keypoint "nose" . (unused in final analysis)
 
 ## Head Pose in 3D: main_head.py
 
