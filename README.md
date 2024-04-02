@@ -160,12 +160,14 @@ python main_2D3D_mv.py --output_dir /path/to/output/ --body_dir /path/to/bodypos
 ```
 
 ### Output
-1. **TXT File**: For each video, a .txt file will be written where each row has the following format and can be found on both gdrive [here](https://drive.google.com/drive/u/0/folders/18KJ8gT32ZiY57bEglp9jVACo3zBLX0Kx) or databrary [here](https://nyu.databrary.org/volume/1020/slot/70775): 
-(frame, flag_a, flag_h, head_x, head_y, head_z, att_x, att_y, att_z, handL_x, handL_y, handL_z, handR_x, handR_y, handR_z)
+1. **TXT File**: For each video, a .txt file will be written where each row has the following format and can be found on both gdrive [here](https://drive.google.com/drive/u/0/folders/18KJ8gT32ZiY57bEglp9jVACo3zBLX0Kx) or databrary [here](https://nyu.databrary.org/volume/1020/slot/70775):
+   
+(frame, flag_a, flag_h, head_x, head_y, head_z, R_x, R_y, R_z, att_x, att_y, att_z, handL_x, handL_y, handL_z, handR_x, handR_y, handR_z)
     - `frame`: Frame number.
     - `flag_a`=0: Placeholder flag telling whether the attention/head position has been corrected in the frame (set to zero)
     - `flag_h`=0: Placeholder flag telling whether a hand position has been corrected in the frame (set to zero)
     - `head_x`, `head_y`, `head_z`: Projected head location in 3D. (x,y,z)
+    - `R_x`, `R_y`, `R_z`: Head orientation as a 3D vector associated to the head bounding box
     - `att_x`, `att_y`, `att_z`: Projected attention point location in 3D. (x,y,z)
     - `handL_x`, `handL_y`, `handL_z`: Projected left hand location in 3D. (x,y,z)
     - `handR_x`, `handR_y`, `handR_z`: Projected right hand location in 3D. (x,y,z)
