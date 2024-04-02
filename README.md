@@ -23,6 +23,7 @@ pip install -r requirements.txt
 ```
 
 3. Download Pretrained Models
+   
 Download the pretrained models from the following links:
 
 - [Download BodyPose Model](https://drive.google.com/file/d/1r_pjyqLFOP8sO1dYC_zZSUqJ5PBZ4LLm/view?usp=drive_link)
@@ -32,6 +33,7 @@ Download the pretrained models from the following links:
 - [Download Toy Tracking Model](https://example.com/toy_tracking_model.pth)
 
 4. Place Pretrained Models
+
 Place the downloaded pretrained models in the following directories of this repository.
 
 - Place BodyPose Model `infant_w48_384x288.pth` in `DevEv-BackEnd/BodyPose/`
