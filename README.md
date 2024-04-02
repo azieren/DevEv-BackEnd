@@ -107,6 +107,7 @@ For each video, two files will be written:
       - `kpt`: List of keypoints in each bounding box.
 
 2. **TXT File**: Contains body pose information in text format where each rows have the following information and can be found [here](https://nyu.databrary.org/volume/1020/slot/70648): 
+
 (frame, 0, b_id, x_min, y_min, x_max, y_max, x_l, y_l, x_n, y_n)
     - `frame`: Frame number.
     - `b_id`: Body ID.
@@ -133,7 +134,8 @@ python main_head.py --input_dir /path/to/videos/ --output_dir /path/to/output/ -
 
 ### Output
 For each video, a .txt file will be written  where each rows have the following information: 
-(frame, label, x_min, y_min, x_max, y_max,, R_x, R_y, R_z)
+
+(frame, label, x_min, y_min, x_max, y_max, R_x, R_y, R_z)
 
 1. **TXT File**: For each video, a .txt file will be written where each row has the following format and can be found [here](https://drive.google.com/drive/u/0/folders/1zW77D8e3v7NsfpyLyXfR5Es6LDXuawag):
     - `frame`: Frame number.
