@@ -106,7 +106,7 @@ For each video, two files will be written:
       - `bbox`: List of Associated bounding boxes to each view.
       - `kpt`: List of keypoints in each bounding box.
 
-2. **TXT File**: Contains body pose information in text format where each rows have the following information and can be found [here](nyu.databrary.org/volume/1020/slot/70648): 
+2. **TXT File**: Contains body pose information in text format where each rows have the following information and can be found [here](https://nyu.databrary.org/volume/1020/slot/70648): 
 (frame, 0, b_id, x_min, y_min, x_max, y_max, x_l, y_l, x_n, y_n)
     - `frame`: Frame number.
     - `b_id`: Body ID.
@@ -158,7 +158,7 @@ python main_2D3D_mv.py --output_dir /path/to/output/ --body_dir /path/to/bodypos
 ```
 
 ### Output
-1. **TXT File**: For each video, a .txt file will be written where each row has the following format and can be found on both gdrive [here](https://drive.google.com/drive/u/0/folders/18KJ8gT32ZiY57bEglp9jVACo3zBLX0Kx) or databrary [here](nyu.databrary.org/volume/1020/slot/70775): 
+1. **TXT File**: For each video, a .txt file will be written where each row has the following format and can be found on both gdrive [here](https://drive.google.com/drive/u/0/folders/18KJ8gT32ZiY57bEglp9jVACo3zBLX0Kx) or databrary [here](https://nyu.databrary.org/volume/1020/slot/70775): 
 (frame, flag_a, flag_h, head_x, head_y, head_z, att_x, att_y, att_z, handL_x, handL_y, handL_z, handR_x, handR_y, handR_z)
     - `frame`: Frame number.
     - `flag_a`=0: Placeholder flag telling whether the attention/head position has been corrected in the frame (set to zero)
