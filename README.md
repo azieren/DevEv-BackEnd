@@ -1,4 +1,4 @@
-# DevEv-BackEnd
+# DevEv - Developping Environemnt - Training and inference codebase
 Implementation of body, head pose, and attention estimation of infant, projection of head pose and toys in 3D, toy tracking by detection, and child/adult classifier.
 
 This code is the official repository for the ICDL 2024 [publication]():
