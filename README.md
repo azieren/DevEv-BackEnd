@@ -1,9 +1,13 @@
 # DevEv - Developping Environemnt - Training and inference codebase
-Implementation of body, head pose, and attention estimation of infant, projection of head pose and toys in 3D, toy tracking by detection, and child/adult classifier.
-
 This code is the official repository for the ICDL 2024 [publication]():
 `Infants’ Developing Environment: Integration of Computer Vision and Human Annotation to Quantify Where Infants Go, What They Touch, and What They See ` from Han et al.
 
+Estimation of infant's head location, wrists locations and visual attention in a 3D environment given multi-view videos. The environment is composed of a closed-room  with various movable toys and furnitures.
+Implementation of Computer Vision algorithms for: 
+- Infants's head location, wrists location and head pose estimation
+- Toys tracking in 2D 
+- 2D-3D Projection of head/wrist location and toys locations
+#- Collision between the visual cone (based on head location and pose estimation) and the room (with updated movable toys location in 3D), for computing what infants see in every frames
 
 ## Installation
 
