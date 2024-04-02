@@ -158,7 +158,7 @@ python main_2D3D_mv.py --output_dir /path/to/output/ --body_dir /path/to/bodypos
 ```
 
 ### Output
-1. **TXT File**: For each video, a .txt file will be written where each row has the following format and can be found on both gdrive:[here](https://drive.google.com/drive/u/0/folders/18KJ8gT32ZiY57bEglp9jVACo3zBLX0Kx) or databrary [here](nyu.databrary.org/volume/1020/slot/70775): 
+1. **TXT File**: For each video, a .txt file will be written where each row has the following format and can be found on both gdrive [here](https://drive.google.com/drive/u/0/folders/18KJ8gT32ZiY57bEglp9jVACo3zBLX0Kx) or databrary [here](nyu.databrary.org/volume/1020/slot/70775): 
 (frame, flag_a, flag_h, head_x, head_y, head_z, att_x, att_y, att_z, handL_x, handL_y, handL_z, handR_x, handR_y, handR_z)
     - `frame`: Frame number.
     - `flag_a`=0: Placeholder flag telling whether the attention/head position has been corrected in the frame (set to zero)
@@ -218,7 +218,7 @@ python main_2D3D_toys.py --input_dir /path/to/toy_tracking_data/ --output_dir /p
 ```
 ### Output
 
-1. **NPY File**: For each toy, a .npy file will be written to the specified output directory. The file has the following format:
+1. **NPY File**: For each toy, a .npy file will be written to the specified output directory. The file has the following format and some can be found [here](https://drive.google.com/drive/u/0/folders/1sdB-ThxQF7DioFjYZNqiJucUNwswV2Yr):
 
 ```python
 toy_data[toy_name][frame] = {
