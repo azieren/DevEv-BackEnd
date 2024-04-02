@@ -1,4 +1,4 @@
-# DevEv - Developping Environemnt - Training and inference codebase
+# Developing Environment (DevEv) - Training and inference codebase
 This code is the official repository for the ICDL 2024 [publication]():
 `Infants’ Developing Environment: Integration of Computer Vision and Human Annotation to Quantify Where Infants Go, What They Touch, and What They See ` from Han et al.
 
@@ -7,7 +7,6 @@ Implementation of Computer Vision algorithms for:
 - Infants's head location, wrists location and head pose estimation
 - Toys tracking in 2D 
 - 2D-3D Projection of head/wrist location and toys locations
-<- Collision between the visual cone (based on head location and pose estimation) and the room (with updated movable toys location in 3D), for computing what infants see in every frames>
 
 ## Installation
 
@@ -99,7 +98,7 @@ python main_bodypose.py --input_dir /path/to/videos/ --output_dir /path/to/outpu
 
 For each video, two files will be written:
 
-1. **NPZ File**: Contains body pose information with the following format:
+1. **NPZ File**: Contains body pose information with the following format and can be found [here](https://drive.google.com/drive/u/0/folders/1WH-VZd0zxwTWjZ2V2Xf_nieNL_iuElav):
     - `dataset`: A dictionnary where a key is a frame number and values are 2D detection information
     - `dataset[frame] = {"views": views, "bbox": bbox_tensor, "kpt": kps}`
       - `frame`: Frame number.
@@ -107,7 +106,7 @@ For each video, two files will be written:
       - `bbox`: List of Associated bounding boxes to each view.
       - `kpt`: List of keypoints in each bounding box.
 
-2. **TXT File**: Contains body pose information in text format where each rows have the following information: 
+2. **TXT File**: Contains body pose information in text format where each rows have the following information and can be found [here](nyu.databrary.org/volume/1020/slot/70648): 
 (frame, 0, b_id, x_min, y_min, x_max, y_max, x_l, y_l, x_n, y_n)
     - `frame`: Frame number.
     - `b_id`: Body ID.
@@ -136,7 +135,7 @@ python main_head.py --input_dir /path/to/videos/ --output_dir /path/to/output/ -
 For each video, a .txt file will be written  where each rows have the following information: 
 (frame, label, x_min, y_min, x_max, y_max,, R_x, R_y, R_z)
 
-1. **TXT File**: For each video, a .txt file will be written where each row has the following format:
+1. **TXT File**: For each video, a .txt file will be written where each row has the following format and can be found [here](https://drive.google.com/drive/u/0/folders/1zW77D8e3v7NsfpyLyXfR5Es6LDXuawag):
     - `frame`: Frame number.
     - `label`: Adult/Child label.
     - `x_min`, `y_min`, `x_max`, `y_max`: Head bounding box coordinate
@@ -159,7 +158,7 @@ python main_2D3D_mv.py --output_dir /path/to/output/ --body_dir /path/to/bodypos
 ```
 
 ### Output
-1. **TXT File**: For each video, a .txt file will be written where each row has the following format: 
+1. **TXT File**: For each video, a .txt file will be written where each row has the following format and can be found on both gdrive:[here](https://drive.google.com/drive/u/0/folders/18KJ8gT32ZiY57bEglp9jVACo3zBLX0Kx) or databrary [here](nyu.databrary.org/volume/1020/slot/70775): 
 (frame, flag_a, flag_h, head_x, head_y, head_z, att_x, att_y, att_z, handL_x, handL_y, handL_z, handR_x, handR_y, handR_z)
     - `frame`: Frame number.
     - `flag_a`=0: Placeholder flag telling whether the attention/head position has been corrected in the frame (set to zero)
